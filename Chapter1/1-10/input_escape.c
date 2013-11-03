@@ -22,6 +22,7 @@ int main (void) {
 			putchar('\\');
 			putchar('\\');
 		}
+		// on my system that didn`t work
 		else if (c == '\b') {
 			//printf("\\b");
 			putchar('\\');
