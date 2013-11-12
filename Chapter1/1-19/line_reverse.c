@@ -1,4 +1,4 @@
-/*
+/**
  * Exercise 1-19, page 31
  * Упражнение 1.19, страница 44
  * 
@@ -59,3 +59,4 @@ void reverse (char line[], int len) {
 	}
 	return;
 }
+

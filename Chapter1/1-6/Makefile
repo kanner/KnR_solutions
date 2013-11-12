@@ -38,7 +38,7 @@ tags:
 	ctags *.[hc]
 
 help:
-	head -n 8 ${TARGET}.c
+	awk '/\/*/{printit=1}/*\//{print; nextfile}printit == 1' ${TARGET}.c
 
 clean:
 	rm -f *.o ${TARGET}
