@@ -81,13 +81,17 @@ int main (void) {
 		 *	- insert char into word[], increase len
 		 */
 		else {
-			if (col_count + len == STR_WIDTH && len > 1) {		// if len = 1 there will be bug here
+			if (len == 1 && col_count + len ==  STR_WIDTH) {	// otherwise there will be bug in next block
+				putchar('\n');
+				col_count = 0;
+			}
+			if (col_count + len == STR_WIDTH && len > 1) {
 				for (i = 0; i < STR_WIDTH - 1 - col_count; i++)
 					putchar(word[i]);
 				putchar('-');
 				putchar('\n');
-				word[0] = word[STR_WIDTH - 1 - col_count];
-				len = 1;
+				word[0] = word[STR_WIDTH - 1 - col_count];	// = word[i];
+				len = 1;	// = i - (STR_WIDTH - 1 - col_count);
 				col_count = 0;
 			}
 			word[len] = c;
