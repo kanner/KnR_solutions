@@ -12,19 +12,20 @@
 
 #include <stdio.h>
 
-#define	CODE	0
-#define	COMMENT	1
-#define	QUOTE	2
-#define SLASH	3
-#define STAR	4
-#define LITERAL	5
+#define	CODE			0
+#define	COMMENT			1
+#define	SIMPLE_COMMENT	2
+#define	QUOTE			3
+#define SLASH			4
+#define STAR			5
+#define LITERAL			6
 
 int main(void)
 {
 	int c;
 	/*
 	 * we have several states:
-	 *	- CODE/COMMENT
+	 *	- CODE/COMMENT/SIMPLE_COMMENT
 	 *	- SLASH (one '/' inserted in CODE state)
 	 *	- QUOTE ('"' or '\'' inserted in CODE state)
 	 *	- STAR ('*' inserted in COMMENT state)
@@ -56,6 +57,8 @@ int main(void)
         else if (state == SLASH) {
 			if (c == '*')						// we started the comment with '/' and '*' (transition to state COMMENT) */
 				state = COMMENT;
+			else if (c == '/')					// we started the comment with '/' and '/' (transition to state COMMENT)
+				state = SIMPLE_COMMENT;
 			else if (c == '"' || c == '\'') {	// quotes inserted in code (transition to state QUOTE)
 				state = QUOTE;
 				quote = c;
@@ -69,6 +72,12 @@ int main(void)
 		else if (state == COMMENT) {			// inserted '*' in COMMENT state (transition to state STAR)
 			if (c == '*')
 				state = STAR;
+		}
+		else if (state == SIMPLE_COMMENT) {		// the line end in '/' + '/' comment (transition to state CODE)
+			if (c == '\n') {
+				state = CODE;
+				putchar(c);
+			}
 		}
 		else if (state == STAR) {
 			if (c == '/')						// we ended commet with */ (transition to state CODE)
