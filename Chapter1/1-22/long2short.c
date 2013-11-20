@@ -18,12 +18,32 @@
 #define	TAB_WIDTH	4
 #define	STR_WIDTH	80
 
+int check_vowel(char ch) {
+	if (ch == 'i' ||
+		ch == 'I' ||
+		ch == 'e' ||
+		ch == 'E' ||
+		ch == 'a' ||
+		ch == 'A' ||
+		ch == 'y' ||
+		ch == 'Y' ||
+		ch == 'u' ||
+		ch == 'U' ||
+		ch == 'o' ||
+		ch == 'O')
+		return 1;
+	else
+		return 0;
+}
+
 int main (void) {
-	int c, i;
+	int c, i, j;
 	int col_count = 0;
 	int len = 0;
 	int space_count = 0;
+	int vowels = 0;			// we can use smart word wrap if we want (wrap only after vowel char)
 	char word[STR_WIDTH];
+	char chunk[STR_WIDTH];
 
 	while ((c = getchar()) != EOF) {
 		
@@ -85,13 +105,26 @@ int main (void) {
 				putchar('\n');
 				col_count = 0;
 			}
-			if (col_count + len == STR_WIDTH && len > 1) {
-				for (i = 0; i < STR_WIDTH - 1 - col_count; i++)
-					putchar(word[i]);
-				putchar('-');
+			if (col_count + len >= STR_WIDTH && len > 1) {
+				vowels = 0;
+				for (j=0, i = 0; i < STR_WIDTH - 1 - col_count; j++, i++) {
+					vowels += check_vowel(word[i]);
+					chunk[j] = word[i];
+					if (check_vowel(word[i]) == 1) {
+						chunk[j+1] = '\0';
+						printf("%s", chunk);
+						for (j = 0; j< i+1; j++)
+							chunk[j] = '\0';
+						j = 0;
+					}
+				}
+				if (vowels > 0)
+					putchar('-');
 				putchar('\n');
-				word[0] = word[STR_WIDTH - 1 - col_count];	// = word[i];
-				len = 1;	// = i - (STR_WIDTH - 1 - col_count);
+				chunk[j+1] = '\0';
+				printf("%s", chunk);
+				word[0] = word[i];	// = word[STR_WIDTH - 1 - col_count];
+				len = (STR_WIDTH - col_count) - i;	// = 1;
 				col_count = 0;
 			}
 			word[len] = c;
