@@ -43,7 +43,7 @@ int main (void) {
 	int space_count = 0;
 	int vowels = 0;			// we can use smart word wrap if we want (wrap only after vowel char)
 	char word[STR_WIDTH];
-	char chunk[STR_WIDTH];
+	char chunk[STR_WIDTH] = {0};
 
 	while ((c = getchar()) != EOF) {
 		
@@ -60,22 +60,23 @@ int main (void) {
 		 *	- reset len
 		 */
 		if (c == ' ' || c == '\t') {
-			word[len] = '\0';
-			space_count = (c == '\t') ? TAB_WIDTH : 1;
+			word[len] = '\0';							// end out word
+			space_count = (c == '\t') ? TAB_WIDTH : 1;	// space_count can be either TAB_WIDTH or 1
 			if (col_count + len > STR_WIDTH) {
 				putchar('\n');
 				col_count = 0;
 			}
 			col_count += len;
 			printf("%s", word);
+			len = 0;
 			if (col_count + space_count > STR_WIDTH) {
 				putchar('\n');
 				col_count = 0;
 			}
-
-			putchar(c);
-			col_count += space_count;
-			len = 0;
+			else {
+				putchar(c);
+				col_count += space_count;
+			}
 		}
 		/**
 		 * if we got \n:
@@ -86,12 +87,16 @@ int main (void) {
 		 *	- reset len and col_count
 		 */
 		else if (c == '\n') {
-			word[len] = '\0';
-			if (col_count + len > STR_WIDTH)
+			word[len] = '\0';							// end out word
+			if (col_count + len > STR_WIDTH) {
 				putchar('\n');
+				col_count = 0;
+			}
+			col_count += len;
 			printf("%s", word);
+			len = 0;
 			putchar(c);
-			len = col_count = 0;
+			col_count = 0;
 		}
 		/**
 		 * if we got some other char:
@@ -101,31 +106,35 @@ int main (void) {
 		 *	- insert char into word[], increase len
 		 */
 		else {
-			if (len == 1 && col_count + len ==  STR_WIDTH) {	// otherwise there will be bug in next block
-				putchar('\n');
-				col_count = 0;
-			}
-			if (col_count + len >= STR_WIDTH && len > 1) {
+			// this is word wrap block
+			if (col_count + len + 1 > STR_WIDTH) {
 				vowels = 0;
-				for (j=0, i = 0; i < STR_WIDTH - 1 - col_count; j++, i++) {
-					vowels += check_vowel(word[i]);
+				for (j=0, i = 0; i < STR_WIDTH - 1 - col_count; i++) {
 					chunk[j] = word[i];
-					if (check_vowel(word[i]) == 1) {
+					if (check_vowel(word[i]) == 1 && j != 0) {
+						vowels += check_vowel(word[i]);
 						chunk[j+1] = '\0';
 						printf("%s", chunk);
 						for (j = 0; j< i+1; j++)
 							chunk[j] = '\0';
 						j = 0;
 					}
+					else
+						j++;
 				}
 				if (vowels > 0)
 					putchar('-');
-				putchar('\n');
-				chunk[j+1] = '\0';
-				printf("%s", chunk);
 				word[0] = word[i];	// = word[STR_WIDTH - 1 - col_count];
 				len = (STR_WIDTH - col_count) - i;	// = 1;
+				
+				putchar('\n');
 				col_count = 0;
+				col_count += i;
+
+				chunk[j+1] = '\0';
+				printf("%s", chunk);
+				for (j = 0; j< i+1; j++)
+					chunk[j] = '\0';
 			}
 			word[len] = c;
 			len++;
