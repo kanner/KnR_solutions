@@ -36,6 +36,31 @@ int check_vowel(char ch) {
 		return 0;
 }
 
+void print_word (char *word, int *len, int *col_count) {
+	int _len = *len;
+	int _col_count = *col_count;
+
+	word[_len] = '\0';	// end out word
+	if (_col_count + _len > STR_WIDTH) {
+		putchar('\n');
+		*col_count = 0;
+	}
+	*col_count += _len;
+	printf("%s", word);
+	*len = 0;
+}
+
+void clear_chunk (char *chunk, int *end) {
+	int j = 0;
+	int _end = *end;
+
+	chunk[_end+1] = '\0';
+	printf("%s", chunk);
+	for (j = 0; j< _end+1; j++)
+		chunk[j] = '\0';
+	*end = 0;
+}
+
 int main (void) {
 	int c, i, j;
 	int col_count = 0;
@@ -60,15 +85,9 @@ int main (void) {
 		 *	- reset len
 		 */
 		if (c == ' ' || c == '\t') {
-			word[len] = '\0';							// end out word
 			space_count = (c == '\t') ? TAB_WIDTH : 1;	// space_count can be either TAB_WIDTH or 1
-			if (col_count + len > STR_WIDTH) {
-				putchar('\n');
-				col_count = 0;
-			}
-			col_count += len;
-			printf("%s", word);
-			len = 0;
+			print_word(word, &len, &col_count);
+			
 			if (col_count + space_count > STR_WIDTH) {
 				putchar('\n');
 				col_count = 0;
@@ -87,14 +106,7 @@ int main (void) {
 		 *	- reset len and col_count
 		 */
 		else if (c == '\n') {
-			word[len] = '\0';							// end out word
-			if (col_count + len > STR_WIDTH) {
-				putchar('\n');
-				col_count = 0;
-			}
-			col_count += len;
-			printf("%s", word);
-			len = 0;
+			print_word(word, &len, &col_count);
 			putchar(c);
 			col_count = 0;
 		}
@@ -113,11 +125,7 @@ int main (void) {
 					chunk[j] = word[i];
 					if (check_vowel(word[i]) == 1 && j != 0) {
 						vowels += check_vowel(word[i]);
-						chunk[j+1] = '\0';
-						printf("%s", chunk);
-						for (j = 0; j< i+1; j++)
-							chunk[j] = '\0';
-						j = 0;
+						clear_chunk(chunk, &j);
 					}
 					else
 						j++;
@@ -131,10 +139,7 @@ int main (void) {
 				col_count = 0;
 				col_count += i;
 
-				chunk[j+1] = '\0';
-				printf("%s", chunk);
-				for (j = 0; j< i+1; j++)
-					chunk[j] = '\0';
+				clear_chunk(chunk, &j);
 			}
 			word[len] = c;
 			len++;
