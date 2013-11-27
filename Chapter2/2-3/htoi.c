@@ -34,7 +34,7 @@ int htoi(char *str) {
 		else if (c >= 'A' && c <= 'F')
 			n += 10 + (c - 'A');		// letter in range 'A-F'
 		else
-			return n/16;					// something wrong - return our value as it is
+			return n/16;				// something wrong - return our value as it is
 	}
 	return n;
 }
