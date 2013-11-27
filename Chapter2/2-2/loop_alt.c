@@ -5,7 +5,6 @@
  * Write a loop equivalent to the for loop above without using && or ||.
  *
  * Напишите цикл, эквивалентный приведенному выше циклу for, не используя операции && и ||.
- * 
  */
 
 #include <stdio.h>
