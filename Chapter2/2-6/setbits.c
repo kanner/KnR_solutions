@@ -18,10 +18,10 @@
 
 unsigned setbits(unsigned x, int p, int n, unsigned y) {
 	int i, j, mask;
-	i = (x >> (y+1-n)) & ~(~0 << n);			// rightmost n bits of y
+	i = (x >> (y+1-n)) & ~(~0 << n);	// rightmost n bits of y
 	mask = ~(((1 << n) - 1) << (p+1-n));	// mask with 0`s at the rightmost n bits of p
-	j = mask & x;							// make zero`s
-	return j | i << (p+1-n);				// replace with rightmost n bits of y
+	j = mask & x;				// make zero`s
+	return j | i << (p+1-n);		// replace with rightmost n bits of y
 }
 
 int main (void) {
