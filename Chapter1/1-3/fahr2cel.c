@@ -14,9 +14,12 @@ int main (void) {
 	float fahr, celsium;
 	int lower, upper, step;
 
-	lower = 0;	/* lower limit of temperature table */
-	upper = 300;	/* upper limit */
-	step = 20;	/* step size */
+	/** lower limit of temperature table */
+	lower = 0;
+	/** upper limit */
+	upper = 300;
+	/** step size */
+	step = 20;
 
 	fahr = lower;
 

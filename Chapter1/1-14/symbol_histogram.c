@@ -10,9 +10,9 @@
  */
 
 #include <stdio.h>
-#include <limits.h>	// for values of CHAR_MIN and CHAR_MAX
+/** for values of CHAR_MIN and CHAR_MAX */
+#include <limits.h>
 
-/* подсчет цифр, символов пустого пространства, остальных */
 int main (void)
 {
 	int c, i, j;

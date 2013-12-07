@@ -40,7 +40,8 @@ void print_word (char *word, int *len, int *col_count) {
 	int _len = *len;
 	int _col_count = *col_count;
 
-	word[_len] = '\0';	// end out word
+	/** end out word */
+	word[_len] = '\0';
 	if (_col_count + _len > STR_WIDTH) {
 		putchar('\n');
 		*col_count = 0;
@@ -66,7 +67,8 @@ int main (void) {
 	int col_count = 0;
 	int len = 0;
 	int space_count = 0;
-	int vowels = 0;			// we can use smart word wrap if we want (wrap only after vowel char)
+	/** we can use smart word wrap if we want (wrap only after vowel char) */
+	int vowels = 0;
 	char word[STR_WIDTH];
 	char chunk[STR_WIDTH] = {0};
 
@@ -85,7 +87,8 @@ int main (void) {
 		 *	- reset len
 		 */
 		if (c == ' ' || c == '\t') {
-			space_count = (c == '\t') ? TAB_WIDTH : 1;	// space_count can be either TAB_WIDTH or 1
+			/** space_count can be either TAB_WIDTH or 1 */
+			space_count = (c == '\t') ? TAB_WIDTH : 1;
 			print_word(word, &len, &col_count);
 			
 			if (col_count + space_count > STR_WIDTH) {
@@ -118,7 +121,7 @@ int main (void) {
 		 *	- insert char into word[], increase len
 		 */
 		else {
-			// this is word wrap block
+			/** this is word wrap block */
 			if (col_count + len + 1 > STR_WIDTH) {
 				vowels = 0;
 				for (j=0, i = 0; i < STR_WIDTH - 1 - col_count; i++) {
@@ -132,8 +135,8 @@ int main (void) {
 				}
 				if (vowels > 0)
 					putchar('-');
-				word[0] = word[i];	// = word[STR_WIDTH - 1 - col_count];
-				len = (STR_WIDTH - col_count) - i;	// = 1;
+				word[0] = word[i];// = word[STR_WIDTH - 1 - col_count];
+				len = (STR_WIDTH - col_count) - i;// = 1;
 				
 				putchar('\n');
 				col_count = 0;

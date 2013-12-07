@@ -15,14 +15,14 @@
 #define OUT		0
 #define MAXWORDLEN	10
 
-/* подсчет цифр, символов пустого пространства, остальных */
 int main (void)
 {
 	int c, i;
 	int word_length = 0;
-	int height = 0;		// the height of vertical histogram
+	/** the height of vertical histogram */
+	int height = 0;
 	int state = OUT;
-	// array of word length`s, [MAXWORDLEN] - length above MAXWORDLEN
+	/** array of word length`s, [MAXWORDLEN] - length above MAXWORDLEN */
 	int length[MAXWORDLEN+1]={0};
 	c = i = 0;
 
@@ -46,7 +46,8 @@ int main (void)
 
 	printf("length =");
 	for (i = 0; i <= 10; i++) {
-		if (length[i]>height)	// needed for vertical histogram
+		/** needed for vertical histogram */
+		if (length[i]>height)
 			height = length[i];
 		printf(" %d", length[i]);
 	}
@@ -67,7 +68,8 @@ int main (void)
 	printf("\nvertical histogram:\n");
 	for (i = 0; i <= height; i++) {
 		for (j = 0; j <= 10; j++ ) {
-			if (i == 0) {	// header
+			/** header */
+			if (i == 0) {
 				if (j == 10)
 					printf(">10 [%d]\t", length[j]);
 				else

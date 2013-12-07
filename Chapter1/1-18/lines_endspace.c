@@ -21,15 +21,16 @@ int main (void) {
 	int head, tail, inner;
 
 	while ((len = my_getline(line, MAXLINE)) > 0) {
-		// first find out where`s the beginning of real text
+		/** first find out where`s the beginning of real text */
 		for(head = 0; line[head] == ' ' || line[head] == '\t'; head++);
-		// second find out where`s the real end of the text
+		/** second find out where`s the real end of the text */
 		for(tail = len; line[tail] == ' ' || line[tail] == '\t' || line[tail] == '\n' || line[tail] == '\0'; tail--);
 		if (tail - head >= 0) {
-			// from real beginning till real end - print chars
+			/** from real beginning till real end - print chars */
 			for(inner = head; inner <= tail; inner++)
 				putchar(line[inner]);
-			printf("EOF");	// thats for example, in order to see the real EOF in output (actually before EOF)
+			/** thats for example, in order to see the real EOF in output (actually before EOF) */
+			printf("EOF");
 			putchar('\n');
 			putchar('\0');
 		}
@@ -38,7 +39,8 @@ int main (void) {
 }
 
 int my_getline(char s[], int lim) {
-	int c = 0;	// should be initialized
+	/** should be initialized */
+	int c = 0;
 	int i;
 	for (i=0; i < lim-1 && (c = getchar()) != EOF && c !='\n'; i++)
 		s[i] = c;

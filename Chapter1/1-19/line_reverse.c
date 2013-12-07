@@ -29,7 +29,8 @@ int main (void) {
 }
 
 int my_getline (char s[], int lim) {
-	int c = 0;	// should be initialized
+	/** should be initialized */
+	int c = 0;
 	int i;
 	for (i=0; i < lim-1 && (c = getchar()) != EOF && c !='\n'; i++)
 		s[i] = c;
@@ -46,12 +47,12 @@ void reverse (char line[], int len) {
 	int _len = len;
 	char temp;
 
-	// let`s keep \n at the end of line
+	/** let`s keep \n at the end of line */
 	if (line[_len - 1] == '\n')
 		_len = _len - 1;
 
 	for (i = 0; i < _len; ++i) {
-		// let`s change [i] and [_len - 1] chars and decrease _len
+		/** let`s change [i] and [_len - 1] chars and decrease _len */
 		temp = line[i];
 		line[i] = line[_len - 1];
 		line[_len - 1] = temp;

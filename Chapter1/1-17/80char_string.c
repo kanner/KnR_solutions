@@ -19,7 +19,7 @@ int main (void) {
 	char line[MINLENGTH];
 
 	while ((len = my_getline(line, MINLENGTH)) > 0) {
-		// we don`t need to consider '\n' on the end - just line length
+		/** we don`t need to consider '\n' on the end - just line length */
 		if ((len == MINLENGTH - 1) && line[len-1] != '\n') {
 			printf ("this line is longer than 80 characters - %s", line);
 			while ((c = getchar()) != EOF && c != '\n')
@@ -32,7 +32,8 @@ int main (void) {
 }
 
 int my_getline(char s[], int lim) {
-	int c = 0;	// should be initialized
+	/** should be initialized */
+	int c = 0;
 	int i;
 	for (i=0; i < lim-1 && (c = getchar()) != EOF && c !='\n'; i++)
 		s[i] = c;

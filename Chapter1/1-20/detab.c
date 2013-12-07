@@ -17,20 +17,24 @@
 
 int main (void) {
 	int i, c;
-	int col_count = 0;	// initialized column counter
+	/** initialized column counter */
+	int col_count = 0;
 
 	while ((c = getchar()) != EOF) {
 		if (c == '\t') {
 			for (i = 0; i < (TAB - col_count%TAB); i++)
 				putchar(' ');
-			col_count = col_count + (TAB - col_count%TAB);	// we inserted space-chars - increase column counter
+			/** we inserted space-chars - increase column counter */
+			col_count = col_count + (TAB - col_count%TAB);
 		}
 		else {
 			putchar(c);
 			if (c == '\n')
-				col_count = 0;			// reset column counter
+				/** reset column counter */
+				col_count = 0;
 			else
-				col_count = col_count + 1;	// new character inserted - increase column counter
+				/** new character inserted - increase column counter */
+				col_count = col_count + 1;
 		}
 	}
 	return 0;

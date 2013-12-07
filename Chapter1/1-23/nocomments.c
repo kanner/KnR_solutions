@@ -12,13 +12,13 @@
 
 #include <stdio.h>
 
-#define	CODE			0
-#define	COMMENT			1
-#define	SIMPLE_COMMENT	2
-#define	QUOTE			3
-#define SLASH			4
-#define STAR			5
-#define LITERAL			6
+#define CODE	0
+#define COMMENT	1
+#define SIMPLE_COMMENT	2
+#define QUOTE	3
+#define SLASH	4
+#define STAR	5
+#define LITERAL	6
 
 int main(void)
 {
@@ -32,60 +32,77 @@ int main(void)
 	 *	- LITERAL ('\\' inserted in QUOTE state - in string or char constant)
 	 */
 	int state;
-	char quote = '\'';	// just to initialize
+	/** just to initialize */
+	char quote = '\'';
 
-	state = CODE;		// at first the state is CODE
+	/** at first the state is CODE */
+	state = CODE;
 	while ((c = getchar()) != EOF) {
 		if (state == CODE) {
-			if (c == '/')						// inserted one '/' in code (transition to state SLASH)
+			/** inserted one '/' in code (transition to state SLASH) */
+			if (c == '/')
 				state = SLASH;
 			else {
-				if (c == '"' || c == '\'') {	// quotes inserted in code (transition to state QUOTE)
+				/** quotes inserted in code (transition to state QUOTE) */
+				if (c == '"' || c == '\'') {
 					state = QUOTE;
 					quote = c;
 				}
-				putchar(c);						// put all characters in QUOTE and CODE states
+				/** put all characters in QUOTE and CODE states */
+				putchar(c);
 			}
 		}
         else if (state == QUOTE) {
-			if (c == '\\')						// inserted '\\' in QUOTE state (transition to state LITERAL)
+			/** inserted '\\' in QUOTE state (transition to state LITERAL) */
+			if (c == '\\')
 				state = LITERAL;
-			else if (c == quote)				// we ended literal with the same quote-char (transition back to state CODE)
+			/** we ended literal with the same quote-char (transition back to state CODE) */
+			else if (c == quote)
 				state = CODE;
-			putchar(c);							// put all characters in QUOTE, LITERAL and CODE states
+			/** put all characters in QUOTE, LITERAL and CODE states */
+			putchar(c);
 		}
         else if (state == SLASH) {
-			if (c == '*')						// we started the comment with '/' and '*' (transition to state COMMENT) */
+			/** we started the comment with '/' and '*' (transition to state COMMENT) */
+			if (c == '*')
 				state = COMMENT;
-			else if (c == '/')					// we started the comment with '/' and '/' (transition to state COMMENT)
+			/** we started the comment with '/' and '/' (transition to state COMMENT) */
+			else if (c == '/')
 				state = SIMPLE_COMMENT;
-			else if (c == '"' || c == '\'') {	// quotes inserted in code (transition to state QUOTE)
+			/** quotes inserted in code (transition to state QUOTE) */
+			else if (c == '"' || c == '\'') {
 				state = QUOTE;
 				quote = c;
 			}
-			else {								// '/' could be just code character (transition to state CODE)
+			/** '/' could be just code character (transition to state CODE) */
+			else {
 				state = CODE;
 				putchar('/');
 				putchar(c);
 			}
 		}
-		else if (state == COMMENT) {			// inserted '*' in COMMENT state (transition to state STAR)
+		/** inserted '*' in COMMENT state (transition to state STAR) */
+		else if (state == COMMENT) {
 			if (c == '*')
 				state = STAR;
 		}
-		else if (state == SIMPLE_COMMENT) {		// the line end in '/' + '/' comment (transition to state CODE)
+		/** the line end in '/' + '/' comment (transition to state CODE) */
+		else if (state == SIMPLE_COMMENT) {
 			if (c == '\n') {
 				state = CODE;
 				putchar(c);
 			}
 		}
 		else if (state == STAR) {
-			if (c == '/')						// we ended commet with */ (transition to state CODE)
+			/** we ended comment with * and / (transition to state CODE) */
+			if (c == '/')
 				state = CODE;
-			else if (c != '*')					// otherwise we are still in COMMENT state
+			/** otherwise we are still in COMMENT state */
+			else if (c != '*')
 				state = COMMENT;
 		}
-        else if (state == LITERAL) {			// insert char and back to QUOTE state (transition to state QUOTES)
+	/** insert char and back to QUOTE state (transition to state QUOTES) */
+        else if (state == LITERAL) {
 			putchar(c);
 			state = QUOTE;
 		}

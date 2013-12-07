@@ -20,11 +20,13 @@
 
 int main (void) {
 	int i, c;
-	int space_count = 0;					// space counter
+	/** space counter */
+	int space_count = 0;
 	int col_count = 0;
 
 	while ((c = getchar()) != EOF) {
-		if (c == ' ') {					// inserted space char
+		/** inserted space char */
+		if (c == ' ') {
 			space_count++;
 
 			/**
@@ -38,12 +40,16 @@ int main (void) {
 				col_count = col_count + (TAB - col_count%TAB);
 			}
 //			if (space_count == TAB) {
-//				putchar('\t');			// if we reached TAB - reset counter and insert tab
-//				space_count = col_count%TAB;	// we should add space chars that equals the offset from prev tab stop
-//				col_count = col_count + (TAB - col_count%TAB);	// we should add this tab` symbols equivalent to col_count
+//				/** if we reached TAB - reset counter and insert tab */
+//				putchar('\t');
+//				/** we should add space chars that equals the offset from prev tab stop */
+//				space_count = col_count%TAB;
+//				/** we should add this tab` symbols equivalent to col_count */
+//				col_count = col_count + (TAB - col_count%TAB);
 //			}
 		}
-		else {						// inserted something else
+		/** inserted something else */
+		else {
 			if (space_count > 0) {
 				for (i=0; i < space_count; i++) {
 					putchar(' ');
@@ -53,7 +59,8 @@ int main (void) {
 			}
 			putchar(c);
 			col_count++;
-			if (c == '\n')				// if we start new line - reset column counter
+			/** if we start new line - reset column counter */
+			if (c == '\n')
 				col_count = 0;
 		}
 	}

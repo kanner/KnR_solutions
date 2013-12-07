@@ -14,7 +14,8 @@
 
 #define MAXLINE	10
 
-int my_getline(char line[], int maxline);	// getline was renamed because there is function with the same name in stdio
+/** getline was renamed because there is function with the same name in stdio */
+int my_getline(char line[], int maxline);
 void copy(char to[], char from[]);
 
 int main (void) {
@@ -35,7 +36,8 @@ int main (void) {
 		}
 	}
 	if (max > 0) {
-		printf("longest line is %d characters\n", max);	// print length
+		/** print length */
+		printf("longest line is %d characters\n", max);
 		printf("content - '%s'\n", longest);
 	}
 
@@ -43,7 +45,8 @@ int main (void) {
 }
 
 int my_getline(char s[], int lim) {
-	int c = 0;	// should be initialized
+	/** should be initialized */
+	int c = 0;
 	int i;
 	for (i=0; i < lim-1 && (c = getchar()) != EOF && c !='\n'; i++)
 		s[i] = c;
