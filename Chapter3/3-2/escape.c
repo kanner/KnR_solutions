@@ -67,7 +67,7 @@ void unescape(char *s, char *t) {
 				/** otherwise it`ll go to default: */
 			default:
 				s[j++] = t[i];
-				// we don`t need seeking other escape char`s
+				/** we don`t need seeking other escape char`s */
 				if(escape == 1)
 					escape = 0;
 				break;

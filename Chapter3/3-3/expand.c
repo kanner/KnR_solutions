@@ -19,17 +19,17 @@
 
 int checkrange(char c1, char c2)
 {
-	if (('a' <= c1 && c1 <= 'z') && /* valid range in a-z */
-		(c1 <= c2 && c2 <= 'z'))
+	/** valid range in a-z */
+	if (('a' <= c1 && c1 <= 'z') && (c1 <= c2 && c2 <= 'z'))
 		return 1;
-    if (('A' <= c1 && c1 <= 'Z') && /* valid range in A-Z */
-		(c1 <= c2 && c2 <= 'Z'))
+	/** valid range in A-Z */
+	if (('A' <= c1 && c1 <= 'Z') && (c1 <= c2 && c2 <= 'Z'))
 		return 1;
-	if (('0' <= c1 && c1 <= '9') && /* valid range in 0-9 */
-		(c1 <= c2 && c2 <= '9'))
+	/** valid range in 0-9 */
+	if (('0' <= c1 && c1 <= '9') && (c1 <= c2 && c2 <= '9'))
 		return 1;
-
-	return 0; /* not a valid range */
+	/** not a valid range */
+	return 0;
 }
 
 void expand(char *s1, char *s2) {

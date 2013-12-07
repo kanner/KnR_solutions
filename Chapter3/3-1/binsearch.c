@@ -26,9 +26,11 @@ int binsearch(int x, int v[], int n) {
 		else if (x > v[mid])
 			low = mid + 1;
 		else
-			return mid;	/* found match */
+			/** found match */
+			return mid;
 	}
-	return -1;			/* no match */
+	/** no match */
+	return -1;
 }
 
 int binsearch_alt(int x, int v[], int n) {
