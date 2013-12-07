@@ -21,20 +21,26 @@ int htoi(char *str) {
 
 	n = 0;
 	for (i=0; (c = str[i]) != '\0'; ++i) {
-		n *= 16;						// each digit from left to right must be multiplied by 16
+		/** each digit from left to right must be multiplied by 16 */
+		n *= 16;
 		if (i == 0 && c == '0') {
 			c = str[++i];
-			if (c != 'x' && c != 'X')	// if there`s 0x or 0X - skip it, otherwise return iterator to begining
+			/** if there`s 0x or 0X - skip it, otherwise return iterator to begining */
+			if (c != 'x' && c != 'X')
 				--i;
 		}
 		else if (c >= '0' && c <= '9')
-			n += c - '0';				// simple numeric
+			/** simple numeric */
+			n += c - '0';
 		else if (c >= 'a' && c <= 'f')
-			n += 10 + (c - 'a');		// letter in range 'a-f'
+			/** letter in range 'a-f' */
+			n += 10 + (c - 'a');
 		else if (c >= 'A' && c <= 'F')
-			n += 10 + (c - 'A');		// letter in range 'A-F'
+			/** letter in range 'A-F' */
+			n += 10 + (c - 'A');
 		else
-			return n/16;				// something wrong - return our value as it is
+			/** something wrong - return our value as it is */
+			return n/16;
 	}
 	return n;
 }
@@ -45,7 +51,7 @@ int main (void) {
 
 	for (i = 0; (c = getchar()) != '\n' && i <= LENGTH - 1; i++)
 		str[i] = c;
-	str[i] = 0;
+	str[i] = '\0';
 	printf("hex string: \'%s\'\ndecimal string: \'%d\'\n", str, htoi(str));
 	return 0;
 }
