@@ -12,6 +12,9 @@
  */
 
 #include <stdio.h>
+#include <time.h>
+
+#define MASSIVE_SIZE 1000000
 
 int binsearch(int x, int v[], int n) {
 	int low, high, mid;
@@ -50,7 +53,35 @@ int binsearch_alt(int x, int v[], int n) {
 }
 
 int main (void) {
-	int v[10] = {1,4,7,11,14,21,33,46,102,136};
-	printf("%d\n", binsearch(102, v, 10));
+	clock_t timer;
+	int pos = 0;
+	int i;
+//	int v[10] = {1,4,7,11,14,21,33,46,102,136};
+	int v[MASSIVE_SIZE] = {0};
+
+	for (i = 0; i < MASSIVE_SIZE; ++i)
+		v[i] = i;
+
+	timer = clock();
+	for (i = 0; i < MASSIVE_SIZE; ++i) {
+//		pos = binsearch(i, v, MASSIVE_SIZE);
+//		/** let`s use the worst value to search */
+		pos = binsearch(-1, v, MASSIVE_SIZE);
+//		printf("%d\n", pos);
+	}
+	timer = clock() - timer;
+
+	printf("originl results:\n\ttimer: %lu clocks or %lu seconds\n", timer, timer/CLOCKS_PER_SEC);
+
+	timer = clock();
+	for (i = 0; i < MASSIVE_SIZE; ++i) {
+//		pos = binsearch_alt(i, v, MASSIVE_SIZE);
+//		/** let`s use the worst value to search */
+		pos = binsearch_alt(-1, v, MASSIVE_SIZE);
+//		printf("%d\n", pos);
+	}
+	timer = clock() - timer;
+
+	printf("alternative results:\n\ttimer: %lu clocks or %lu seconds\n", timer, timer/CLOCKS_PER_SEC);
 	return 0;
 }
