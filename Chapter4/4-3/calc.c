@@ -18,6 +18,73 @@
 #define MAXOP 100
 /** signal that a number was found */
 #define NUMBER '0'
+/** maximum depth of val stack */
+#define MAXVAL 100
+/** size of buffer for getch/ungetch */
+#define BUFSIZE 100
+
+/** next free stack position */
+int sp = 0;
+/** value stack */
+double val[MAXVAL];
+/** buffer for ungetch */
+char buf[BUFSIZE];
+/** next free position in buf */
+int  bufp = 0;
+
+void push (double f) {
+	if (sp < MAXVAL)
+		val[sp++] = f;
+	else
+		printf("error: stack full, can`t push %f\n", f);
+}
+
+double pop (void) {
+	if (sp > 0)
+		return val[--sp];
+	else {
+		printf("error: stack empty\n");
+		return 0.0;
+	}
+}
+
+/** get a (possibly pushed back) character */
+int getch(void) {
+	return (bufp > 0) ? buf[--bufp] : getchar();
+}
+
+/** push character back on input */
+void ungetch(int c) {
+	if (bufp >= BUFSIZE)
+		printf("ungetch: too many characters\n");
+	else
+		buf[bufp++] = c;
+}
+
+int getop (char s[]) {
+	int i,c;
+	
+	/** skip space symbpols */
+	while ((s[0] = c = getch()) == ' ' || c == '\t')
+		;
+	s[1] = '\0';
+	if (!isdigit(c) && c != '.')
+		/** not number */
+		return c;
+	i = 0;
+	if (isdigit(c))
+		/** collect integer */
+		while (isdigit(s[++i] = c = getch()))
+			;
+	if (c == '.')
+		/** collect fraction */
+		while (isdigit(s[++i] = c = getch()))
+			;
+	s[i] = '\0';
+	if (c != EOF)
+		ungetch(c);
+	return NUMBER;
+}
 
 //#define MAXLINE 1000
 //int my_getline (char s[], int lim) {
@@ -57,7 +124,7 @@ double atof (char s[]) {
 		}
 		val *= sign / power;
 	}
-	
+
 	/** exponent */
 	if (s[i] == 'e' || s[i] == 'E') {
 		exp_sign = (s[++i] == '-') ? -1 : 1;
@@ -69,78 +136,6 @@ double atof (char s[]) {
 	}
 //	return sign * val / power;
 	return val;
-}
-
-/** maximum depth of val stack */
-#define MAXVAL 100
-
-/** next free stack position */
-int sp = 0;
-/** value stack */
-double val[MAXVAL];
-
-void push (double f) {
-	if (sp < MAXVAL)
-		val[sp++] = f;
-	else
-		printf("error: stack full, can`t push %f\n", f);
-}
-
-double pop (void) {
-	if (sp > 0)
-		return val[--sp];
-	else {
-		printf("error: stack empty\n");
-		return 0.0;
-	}
-}
-
-int getch(void);
-void ungetch(int);
-
-int getop (char s[]) {
-	int i,c;
-	
-	/** skip space symbpols */
-	while ((s[0] = c = getch()) == ' ' || c == '\t')
-		;
-	s[1] = '\0';
-	if (!isdigit(c) && c != '.')
-		/** not number */
-		return c;
-	i = 0;
-	if (isdigit(c))
-		/** collect integer */
-		while (isdigit(s[++i] = c = getch()))
-			;
-	if (c == '.')
-		/** collect fraction */
-		while (isdigit(s[++i] = c = getch()))
-			;
-	s[i] = '\0';
-	if (c != EOF)
-		ungetch(c);
-	return NUMBER;
-}
-
-#define BUFSIZE 100
-
-/** buffer for ungetch */
-char buf[BUFSIZE];
-/** next free position in buf */
-int  bufp = 0;
-
-/** get a (possibly pushed back) character */
-int getch(void) {
-	return (bufp > 0) ? buf[--bufp] : getchar();
-}
-
-/** push character back on input */
-void ungetch(int c) {
-	if (bufp >= BUFSIZE)
-		printf("ungetch: too many characters\n");
-	else
-		buf[bufp++] = c;
 }
 
 /**
@@ -186,7 +181,7 @@ int main (void) {
 				printf("\t%.8f\n", pop());
 				break;
 			default:
-				printf("errorL unknown command %s\n", s);
+				printf("error: unknown command %s\n", s);
 				break;
 		}
 	}
