@@ -180,14 +180,14 @@ int main (void) {
 				if (op2 != 0.0)
 					push(pop() / op2);
 				else
-					printf("error: zero divisior\n");
+					printf("error: division by zero\n");
 				break;
 			case '%':
 				op2 = pop();
 				if (op2 != 0.0)
 					push(fmod(pop(), op2));
 				else
-					printf("error: zero devisor\n");
+					printf("error: division by zero\n");
 				break;
 			case '\n':
 				printf("\t%.8f\n", pop());
