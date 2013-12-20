@@ -189,6 +189,17 @@ int main (void) {
 				else
 					printf("error: division by zero\n");
 				break;
+			case '?':
+				stack_show();
+				break;
+			case '#':
+				stack_duplicate();
+				break;				
+			case '~':
+				stack_swap();
+				break;
+			case '!':
+				stack_clear();
 			case '\n':
 				printf("\t%.8f\n", pop());
 				break;
