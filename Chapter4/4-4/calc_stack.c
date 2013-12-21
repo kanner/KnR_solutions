@@ -90,7 +90,8 @@ void ungetch(int c) {
 }
 
 int getop (char s[]) {
-	int i,c;
+	int i = 0;
+	int c, next_ch;
 	
 	/** skip space symbpols */
 	while ((s[0] = c = getch()) == ' ' || c == '\t')
@@ -99,11 +100,20 @@ int getop (char s[]) {
 	if (!isdigit(c) && c != '.' && c != '-')
 		/** not number */
 		return c;
-	i = 0;
-	if (isdigit(c) || c == '-')
-		/** collect integer */
-		while (isdigit(s[++i] = c = getch()))
-			;
+
+	/** check if there`s a number or '.' after '-' */
+	if (c == '-') {
+		next_ch = getch();
+		if (!isdigit(next_ch) && next_ch != '.')
+			return c;
+		c = next_ch;
+	}
+	else
+		c = getch();
+
+	/** collect integer */
+	while (isdigit(s[++i] = c))
+		c = getch();
 	if (c == '.')
 		/** collect fraction */
 		while (isdigit(s[++i] = c = getch()))
