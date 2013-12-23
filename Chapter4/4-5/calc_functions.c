@@ -247,6 +247,7 @@ int main (void) {
 				break;
 			case '!':
 				stack_clear();
+				break;
 			case '\n':
 				printf("\t%.8f\n", pop());
 				break;
