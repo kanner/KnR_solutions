@@ -20,11 +20,11 @@
 /** signal that a number was found */
 #define NUMBER '0'
 /** signal that some function was found */
-#define FUNCTION '1'
+#define FUNCTION_OR_VARIABLE '1'
 /** signal that some value was found */ 
-#define VARIABLE '2'
+//#define VARIABLE '2'
 /** signal that '\0' was found */
-#define ENDSTRING '3'
+#define ENDSTRING '2'
 /** maximum depth of val stack */
 #define MAXVAL 100
 /** size of buffer for getch/ungetch */
@@ -32,7 +32,7 @@
 /** number of variables */
 #define MAXVARS 26
 /** variable length */
-#define MAX_VAR_NAME 1+1
+#define MAX_VAR_NAME 1
 
 /** next free stack position */
 int sp = 0;
@@ -54,13 +54,13 @@ double pop (void) {
 	if (sp > 0)
 		return val[--sp];
 	else {
-		printf("error: stack empty\n");
+		printf("pop error: stack empty\n");
 		return 0.0;
 	}
 }
 
 struct var {
-	char name[MAX_VAR_NAME];
+	char name[MAX_VAR_NAME+1];
 	double value;
 };
 
@@ -102,7 +102,7 @@ void stack_show(void) {
 	if (sp > 0)
 		printf("stack top: %f\n", val[sp-1]);
 	else
-		printf("error: stack empty\n");
+		printf("stack_show error: stack empty\n");
 }
 
 void stack_duplicate(void) {
@@ -152,7 +152,7 @@ int getop (char s[]) {
 		s[i] = '\0';
 		if (c != EOF)
 			ungetch(c);
-		return FUNCTION;
+		return FUNCTION_OR_VARIABLE;
 	}
 
 	if (!isdigit(c) && c != '.' && c != '-') {
@@ -226,7 +226,7 @@ double atof (char s[]) {
 	return val;
 }
 
-void execute_function(char *name) {
+void process_function_or_variable(char *name) {
 	if (strcmp(name, "sin") == 0)
 		push(sin(pop()));
 	else if (strcmp(name, "cos") == 0)
@@ -244,8 +244,8 @@ void execute_function(char *name) {
 		else
 			push(pow(op1, op2));
 	}
-	/** we`ll use one-letter characters for var`s */
-	else if (strlen(name) == 1)
+	/** we`ll use one-letter characters for var`s (string contains only alphabetical characters here) */
+	else if (strlen(name) == MAX_VAR_NAME)
 //	else if (name[0] >= 'A' && name[0] <= 'Z')
 		process_variable(name);
 	else
@@ -260,6 +260,8 @@ int main (void) {
 	int type;
 	double op2;
 	char s[MAXOP];
+	/** signal that we`ve printed last variable and don`t want to show pop() */
+	int last_var_printed = 0;
 
 	clear_variables();
 
@@ -268,12 +270,12 @@ int main (void) {
 			case NUMBER:
 				push(atof(s));
 				break;
-			case FUNCTION:
-				execute_function(s);
+			case FUNCTION_OR_VARIABLE:
+				process_function_or_variable(s);
 				break;
-			case VARIABLE:
-				process_variable(s);
-				break;
+//			case VARIABLE:
+//				process_variable(s);
+//				break;
 			case ENDSTRING:
 				break;
 			case '+':
@@ -323,8 +325,13 @@ int main (void) {
 				break;
 			case '$':
 				printf("last added value: %s = %f\n", last_var.name, last_var.value);
+				last_var_printed = 1;
+				break;
 			case '\n':
-				printf("\t%.8f\n", pop());
+				if (last_var_printed == 0)
+					printf("\t%.8f\n", pop());
+				else
+					last_var_printed = 0;
 				break;
 			default:
 				printf("error: unknown command \'%s\'\n", s);
