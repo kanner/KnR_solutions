@@ -137,9 +137,9 @@ int buf_alt = EOF;
 
 int getch_one(void) {
 	int temp;
-	if (buf != EOF) {
-		temp = buf;
-		buf = EOF;
+	if (buf_alt != EOF) {
+		temp = buf_alt;
+		buf_alt = EOF;
 	}
 	else
 		temp = getchar();
@@ -147,10 +147,10 @@ int getch_one(void) {
 }
 
 void ungetch_one(int c) {
-	if (buf != EOF)
+	if (buf_alt != EOF)
 		printf("ungetch: too many characters\n");
 	else
-		buf = c;
+		buf_alt = c;
 }
 
 /** push entire string back on input */
