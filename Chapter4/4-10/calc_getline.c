@@ -190,33 +190,36 @@ int getop (char s[]) {
 		;
 	s[1] = '\0';
 
-	if (isalpha(c)) {
+/*	if (isalpha(c)) {
 //		while (isalpha(s[++i] = c = getch()))
 		while (isalpha(s[++i] = c = line[line_index++]))
 			;
 		s[i] = '\0';
 //		if (c != EOF)
 //			ungetch(c);
+		if (c != '\0')
+			line_index--;
 		return FUNCTION_OR_VARIABLE;
 	}
-
-	if (!isdigit(c) && c != '.' && c != '-') {
+*/
+	if (!isdigit(c) && c != '.'/* && c != '-'*/) {
 		/** assigning a variable */
 //		if (c == '=' && (next_ch = getch()) == '\n') {
 //			ungetch('\0');
-		if (c == '=' && (next_ch = line[line_index++]) == '\n') {
+/*		if (c == '=' && (next_ch = line[line_index++]) == '\n') {
+			line_index--;
 			return c;
 		}
 		if (c == '\0')
 			return ENDSTRING;
-		/** not number */
+*/		/** not number */
 		return c;
 	}
 
 	/** check if there`s a number or '.' after '-' */
-	if (c == '-') {
-		next_ch = getch();
-//		next_ch = line[line_index++];
+/*	if (c == '-') {
+//		next_ch = getch();
+		next_ch = line[line_index++];
 		if (!isdigit(next_ch) && next_ch != '.')
 			return c;
 		c = next_ch;
@@ -224,20 +227,22 @@ int getop (char s[]) {
 	else
 //		c = getch();
 		c = line[line_index++];
-
+*/
 	/** collect integer */
-	while (isdigit(s[++i] = c))
-//		c = getch();
-		c = line[line_index++];
+	if (isdigit(c))
+//		while (isdigit(s[++i] = c = getch()))
+		while (isdigit(s[++i] = c = line[line_index++]))
+			;
+	/** collect fraction */
 	if (c == '.')
-		/** collect fraction */
 //		while (isdigit(s[++i] = c = getch()))
 		while (isdigit(s[++i] = c = line[line_index++]))
 			;
 	s[i] = '\0';
-	line_index--;
 //	if (c != EOF)
 //		ungetch(c);
+	if (c != '\0')
+		line_index--;
 	return NUMBER;
 }
 
@@ -299,7 +304,7 @@ void process_function_or_variable(char *name) {
 	else if (strlen(name) == MAX_VAR_NAME)
 		process_variable(name);
 	else
-		printf("error: unknown command \'%s\'\n", name);
+		printf("error2: unknown command \'%s\'\n", name);
 }
 
 /**
@@ -383,7 +388,7 @@ int main (void) {
 						last_var_printed = 0;
 					break;
 				default:
-					printf("error: unknown command \'%s\'\n", s);
+					printf("error1: unknown command \'%s\'\n", s);
 					break;
 			}
 		}
