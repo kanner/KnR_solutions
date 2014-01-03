@@ -14,6 +14,9 @@
 #include <limits.h>
 #include <stdlib.h>
 
+/** INT_MAX lenght = 10 + sign + '\0' */
+#define MAX_LENGTH	12
+
 /**
  * this is the copy of reverse() from Ex.3.4
  */
@@ -23,24 +26,21 @@ void reverse (char s[]) {
 		c = s[i], s[i] = s[j], s[j] = c;
 }
 
-void printd(int n) {
-	if (n < 0) {
-		putchar('-');
-		n = -n;
-	}
-	if (n / 10)
-		printd(n / 10);
-	putchar(n % 10 + '0');
-}
+void itoa_recursive(int n, char s[]) {
+	static int index;
 
-void itoa_recursive(int n) {
 	if (n < 0) {
-		putchar('-');
+//		putchar('-');
+		s[0] = '-';
+		index = 1;
 //		n = -n;	// we can`t do it with INT_MIN
 	}
 	if (abs(n / 10))
-		itoa_recursive(abs(n / 10));
-	putchar(abs (n % 10) + '0');
+		itoa_recursive(abs(n / 10), s);
+
+//	putchar(abs (n % 10) + '0');
+	s[index++] = abs (n % 10) + '0';
+	s[index] = '\0';
 }
 
 /**
@@ -88,8 +88,9 @@ void itoa (int n, char s[]) {
 
 int main (void) {
 	int n = INT_MIN;
-	printf("number character string is: ");
-	itoa_recursive(n);
-	printf("\n");
+	char s[MAX_LENGTH] = {0};
+
+	itoa_recursive(n, s);
+	printf("number character string is \'%s\'\n", s);
 	return 0;
 }
