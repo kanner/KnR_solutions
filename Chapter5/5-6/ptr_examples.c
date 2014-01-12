@@ -43,32 +43,34 @@ void reverse_ptr(char *s) {
 
 void itoa_alt_ptr(int n, char *s) {
 	int sign = n;
+	char *p = s;
 
 	/** we can use absolute values to correct the problem */
 	do {
-		*s++ = abs (n % 10) + '0';
+		*p++ = abs (n % 10) + '0';
 	} while ((abs(n /= 10)) > 0);
 	if (sign < 0)
-		*s++ = '-';
-	*s = '\0';
-//	reverse_ptr(s);
+		*p++ = '-';
+	*p = '\0';
+	reverse_ptr(s);
 }
 
 void itoa_recursive_ptr(int n, char *s) {
-	static int index;
+	static char *p;
 
 	if (n < 0) {
 //		putchar('-');
-		*s = '-';
-		index = 1;
+		*s++ = '-';
 //		n = -n;	// we can`t do it with INT_MIN
 	}
+
+	p = s;
 	if (abs(n / 10))
 		itoa_recursive_ptr(abs(n / 10), s);
 
 //	putchar(abs (n % 10) + '0');
-	*(s + index) = abs (n % 10) + '0';
-	*(s + index + 1) = '\0';
+	*p++ = abs (n % 10) + '0';
+	*p = '\0';
 }
 
 #include <ctype.h>
@@ -188,16 +190,17 @@ int getop_ptr(char *s) {
 #define MAXLINE 1000
 int main (void) {
 	char line[MAXLINE] = {0};
-	char string[100] = {0};
+	char string1[100] = {0};
+	char string2[100] = {0};
 
 	_getline_ptr(line, MAXLINE);
 	printf("getline_ptr() result is:\n%s\n", line);
 
-	itoa_alt_ptr(INT_MIN, string);
-	printf("itoa_alt_ptr() result for \'-2147483648\' (INT_MIN) is %s\n", string);
+	itoa_alt_ptr(INT_MIN, string1);
+	printf("itoa_alt_ptr() result for \'-2147483648\' (INT_MIN) is %s\n", string1);
 
-	itoa_recursive_ptr(INT_MIN, string);
-	printf("itoa_recursive_ptr() result for \'-2147483648\' (INT_MIN) is %s\n", string);
+	itoa_recursive_ptr(INT_MIN, string2);
+	printf("itoa_recursive_ptr() result for \'-2147483648\' (INT_MIN) is %s\n", string2);
 
 	printf("atoi_ptr() result for \'-2147483648\' (INT_MIN) is %d\n", INT_MIN);
 	printf("strindex_ptr() result for \'world\' in \'hello world\' is %d\n", strindex_ptr("hello world", "world") + 1);
