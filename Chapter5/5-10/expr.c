@@ -19,6 +19,8 @@
 #include <math.h>
 #include <string.h>
 
+/** current index in current arg_value */
+int argv_index = 0;
 /** current index of cmd argument */
 int arg_index = 1;
 /** argc */
@@ -135,12 +137,18 @@ void stack_clear(void) {
 /** get a (pos1sibly pushed back) character */
 int getch() {
 //	return (bufp > 0) ? buf[--bufp] : getchar();
-	/** we will return buffer variable or cmd argument (if we they`re left) */
-	if (arg_index < arg_count && strlen(*(arg_value + arg_index)) > 1) {
-		printf("getch: wrong argument... exiting\n");
-		return '\n';
+
+	if (bufp > 0)
+		return buf[--bufp];
+
+	if (*(arg_value[arg_index] + argv_index) == 0 && arg_index <= arg_count) {
+		arg_index++;
+		argv_index = 0;
+		if (arg_index < arg_count)
+			return ' ';
 	}
-	return (bufp > 0) ? buf[--bufp] : ((arg_index < arg_count) ? *(arg_value + arg_index++)[0] : EOF );
+
+	return (arg_index > arg_count - 1) ? EOF : *(arg_value[arg_index] + argv_index++);
 }
 
 /** push character back on input */
@@ -279,8 +287,6 @@ int main (int argc, char *argv[]) {
 
 	arg_count = argc;
 	arg_value = &argv[0];
-//printf("test %s \n", &argv[0]);
-//return 0;
 
 	clear_variables();
 
