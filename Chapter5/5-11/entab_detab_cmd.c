@@ -14,6 +14,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define TABULATION(arg1, arg2)	((arg2 == NULL || arg2[0] == NULL) ? arg1 : atoi(arg2[0]))
+
 int entab(int tab_default_pos, char **tab_poses) {
 	int i, c;
 	/** space counter */
@@ -32,12 +34,12 @@ int entab(int tab_default_pos, char **tab_poses) {
 			 * note: if we have one space before tab stop - we`ll insert \t instead
 			 */
 //			if (space_count >= (TAB - (col_count%TAB))) {
-			if (space_count >= (tab_default_pos - (col_count%tab_default_pos))) {
+			if (space_count >= (TABULATION(tab_default_pos, tab_poses) - col_count%TABULATION(tab_default_pos, tab_poses))) {
 				putchar('\t');
 //				space_count = space_count - (TAB - (col_count%TAB));
 //				col_count = col_count + (TAB - col_count%TAB);
-				space_count = space_count - (tab_default_pos - (col_count%tab_default_pos));
-				col_count = col_count + (tab_default_pos - col_count%tab_default_pos);
+				space_count = space_count - (TABULATION(tab_default_pos, tab_poses) - col_count%TABULATION(tab_default_pos, tab_poses));
+				col_count = col_count + (TABULATION(tab_default_pos, tab_poses) - col_count%TABULATION(tab_default_pos, tab_poses));
 			}
 //			if (space_count == TAB) {
 //				/** if we reached TAB - reset counter and insert tab */
@@ -76,11 +78,14 @@ int detab(int tab_default_pos, char **tab_poses) {
 	while ((c = getchar()) != '\n') {
 		if (c == '\t') {
 //			for (i = 0; i < (TAB - col_count%TAB); i++)
-			for (i = 0; i < (tab_default_pos - col_count%tab_default_pos); i++)
+			for (i = 0; i < (TABULATION(tab_default_pos, tab_poses) - col_count%TABULATION(tab_default_pos, tab_poses)); i++)
 				putchar(' ');
 			/** we inserted space-chars - increase column counter */
 //			col_count = col_count + (TAB - col_count%TAB);
-			col_count = col_count + (tab_default_pos - col_count%tab_default_pos);
+			col_count = col_count + (TABULATION(tab_default_pos, tab_poses) - col_count%TABULATION(tab_default_pos, tab_poses));
+
+			if (tab_poses != NULL && tab_poses[0] != NULL)
+				tab_poses++;
 		}
 		else {
 			putchar(c);
@@ -99,24 +104,28 @@ int detab(int tab_default_pos, char **tab_poses) {
 
 int main (int argc, char *argv[]) {
 	int tab_pos = TAB;
-	char **tab_poses = NULL;
+	/** we`ll use different pointers for detab() and entab() */
+	char **tab_poses1 = NULL;
+	char **tab_poses2 = NULL;
 
 	if (argc == 2)
-		tab_pos = atoi(argv[0]);
-	else if (argc > 2)
-		tab_poses = argv;
+		tab_pos = atoi(argv[1]);
+	else if (argc > 2) {
+		tab_poses1 = argv;
+		tab_poses2 = argv;
+		tab_poses1++;
+		tab_poses2++;
+	}
 
-//if (tab_poses != NULL) {
-//	printf("tab_poses = %d\n", atoi(tab_poses[1]));
-//	printf("tab_poses = %d\n", atoi(tab_poses[2]));
-//}
+//while(tab_poses[0] != NULL)
+//	printf("tab_poses %d\n", atoi((tab_poses++)[0]));
 
 	printf("\ndoing detab...\n");
-	detab(tab_pos, tab_poses);
+	detab(tab_pos, tab_poses1);
 
 	printf("\ndoing entab...\n");
-	entab(tab_pos, tab_poses);
+	entab(tab_pos, tab_poses2);
 	printf("\n");
-
+	
 	return 0;
 }
