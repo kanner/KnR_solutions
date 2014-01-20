@@ -72,6 +72,34 @@ int entab(int start_pos, int col_per_tab) {
 	return 0;
 }
 
+int detab(int start_pos, int col_per_tab) {
+	int i, c;
+	/** initialized column counter */
+	int col_count = 0;
+
+//	while ((c = getchar()) != EOF) {
+	while ((c = getchar()) != '\n') {
+		if (c == '\t') {
+//			for (i = 0; i < (TAB - col_count%TAB); i++)
+			for (i = 0; i < (TABULATION(col_count, start_pos, col_per_tab) - col_count%TABULATION(col_count, start_pos, col_per_tab)); i++)
+				putchar(' ');
+			/** we inserted space-chars - increase column counter */
+//			col_count = col_count + (TAB - col_count%TAB);
+			col_count = col_count + (TABULATION(col_count, start_pos, col_per_tab) - col_count%TABULATION(col_count, start_pos, col_per_tab));
+		}
+		else {
+			putchar(c);
+			if (c == '\n')
+				/** reset column counter */
+				col_count = 0;
+			else
+				/** new character inserted - increase column counter */
+				col_count = col_count + 1;
+		}
+	}
+	return 0;
+}
+
 int main (int argc, char *argv[]) {
 	int start_pos = 0;
 	int col_per_tab = TAB;
@@ -89,8 +117,8 @@ int main (int argc, char *argv[]) {
 
 	printf("m = %d\nn = %d\n", start_pos, col_per_tab);
 	
-//	printf("\ndoing detab...\n");
-//	detab(tab_pos, tab_poses1);
+	printf("\ndoing detab...\n");
+	detab(start_pos, col_per_tab);
 
 	printf("\ndoing entab...\n");
 	entab(start_pos, col_per_tab);
