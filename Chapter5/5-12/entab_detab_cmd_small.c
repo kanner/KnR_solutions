@@ -24,9 +24,15 @@ int entab(int start_pos, int col_per_tab) {
 	/** space counter */
 	int space_count = 0;
 	int col_count = 0;
+	int started_tabbing = 0;
 
 //	while ((c = getchar()) != EOF) {
 	while ((c = getchar()) != '\n') {
+		/** we should reset column counting if we discovered 'start_pos' */
+		if (col_count == start_pos && started_tabbing == 0) {
+			col_count = col_count - start_pos;
+			started_tabbing = 1;
+		}
 		/** inserted space char */
 		if (c == ' ') {
 			space_count++;
@@ -76,9 +82,15 @@ int detab(int start_pos, int col_per_tab) {
 	int i, c;
 	/** initialized column counter */
 	int col_count = 0;
+	int started_tabbing = 0;
 
 //	while ((c = getchar()) != EOF) {
 	while ((c = getchar()) != '\n') {
+		/** we should reset column counting if we discovered 'start_pos' */
+		if (col_count == start_pos && started_tabbing == 0) {
+			col_count = col_count - start_pos;
+			started_tabbing = 1;
+		}
 		if (c == '\t') {
 //			for (i = 0; i < (TAB - col_count%TAB); i++)
 			for (i = 0; i < (TABULATION(col_count, start_pos, col_per_tab) - col_count%TABULATION(col_count, start_pos, col_per_tab)); i++)
