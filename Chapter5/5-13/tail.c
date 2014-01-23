@@ -62,9 +62,14 @@ int _getline_ptr(char *s, int lim) {
 	return s - p;
 }
 
-void line_shift(char *lineptr[], int size) {
-	strcpy(allocbuf, allocbuf + size);
-	allocp -= size;
+void line_shift(char *lineptr[], int shift_size, int nlines) {
+	int i;
+
+	strcpy(allocbuf, allocbuf + shift_size);
+	allocp -= shift_size;
+
+	for (i = 1; i < nlines - 1; i++)
+		lineptr[i] = lineptr[i+1];
 }
 
 int readlines_tail(char *lineptr[], int ntail) {
@@ -74,8 +79,14 @@ int readlines_tail(char *lineptr[], int ntail) {
 	nlines = 0;
 	while ((len = _getline_ptr(line, MAXLEN)) > 0) {
 		if (nlines >= ntail) {
-			line_shift(lineptr, strlen(lineptr[0]));
-			nlines--;
+			line_shift(lineptr, strlen(lineptr[0])+1, nlines);
+//			nlines--;
+			if ((p = alloc(len)) == NULL)
+				return -1;
+			line[len - 1] = '\0';
+			strcpy(p, line);
+//			lineptr[nlines++] = p;
+			lineptr[ntail] = p;
 		}
 		else if ((p = alloc(len)) == NULL) {
 			return -1;
@@ -94,6 +105,11 @@ void writelines(char *lineptr[], int nlines) {
 	printf("\nlines entered:\n");
 	for (i = 0; i < nlines; i++)
 		printf("[%d]\t%s\n", i, lineptr[i]);
+
+	printf("\nraw memory:\n");
+	for (i = 0; i < ALLOCSIZE; i++)
+		printf("%c", allocbuf[i]);
+	printf("\n");
 }
 
 int main (int argc, char *argv[]) {
