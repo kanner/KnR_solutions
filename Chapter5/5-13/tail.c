@@ -66,7 +66,7 @@ void line_shift(char *lineptr[], int shift_size, int nlines) {
 	int i;
 
 	strcpy(allocbuf, allocbuf + shift_size);
-	allocp -= shift_size;
+//	allocp -= shift_size;
 
 	for (i = 1; i < nlines - 1; i++)
 		lineptr[i] = lineptr[i+1];
@@ -86,7 +86,7 @@ int readlines_tail(char *lineptr[], int ntail) {
 			line[len - 1] = '\0';
 			strcpy(p, line);
 //			lineptr[nlines++] = p;
-			lineptr[ntail] = p;
+			lineptr[nlines - 1] = p;
 		}
 		else if ((p = alloc(len)) == NULL) {
 			return -1;
