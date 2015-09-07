@@ -18,7 +18,12 @@
 
 unsigned setbits(unsigned x, int p, int n, unsigned y) {
 	int i, j, mask;
-	/** rightmost n bits of y */
+	/**
+	 * rightmost n bits of y
+	 *
+	 * ~(~0 << n) - 1`s in rightmost n bits
+	 * x >> ()
+	 */
 	i = (x >> (y+1-n)) & ~(~0 << n);
 	/** mask with 0`s at the rightmost n bits of p */
 	mask = ~(((1 << n) - 1) << (p+1-n));
