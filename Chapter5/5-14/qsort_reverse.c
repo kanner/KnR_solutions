@@ -129,7 +129,7 @@ int main (int argc, char *argv[]) {
 
 	if (argc > 1) {
 		int i;
-		for (i = 0; i < argc; i++) {
+		for (i = 1; i < argc; i++) {
 			if (argv[i][0] == '-' && argv[i][2] == '\0') {
 				switch(argv[i][1]) {
 				case 'n':
