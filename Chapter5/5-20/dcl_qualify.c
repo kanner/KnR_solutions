@@ -100,7 +100,8 @@ char errsym[] = {
 	'}',
 	';',
 	'=',
-	',',
+	/** lets keep it to use in function`s arguments type */
+//	',',
 	'\0' // used only like EOM (END OF MASSIVE)
 };
 
@@ -149,6 +150,17 @@ void ungetch(int c) {
 		buf[bufp++] = c;
 }
 
+/** we should return string to 'stdin' if something is wrong */
+void ungetstr(char *str)
+{
+	int i = strlen(str);
+	/** ungetch() in reverse order */
+	while (i > 0) {
+		ungetch(str[i-1]);
+		i--;
+	}
+}
+
 /** last lexem type */
 int tokentype;
 /** last lexem */
@@ -183,6 +195,11 @@ int gettoken(void) {
 			return tokentype = '(';
 		}
 	}
+/*	else if (c == ')') {
+		ungetch(c);
+		return tokentype = ')';
+	}
+*/
 	/** collect "[SIZE]" tokens */
 	else if (c == '[') {
 		for (*p++ = c; (*p = getch()) != ']'; p++) {
@@ -247,6 +264,7 @@ void dcl(void) {
 /** parse direct declaration */
 void dirdcl(void) {
 	int type;
+	char c;
 
 	/** assume here: tokentype != ERR before we call gettoken() */
 
@@ -284,22 +302,30 @@ void dirdcl(void) {
 			strcat(out, " of");
 		}
 	}
-
+	if (type == '(' && gettoken() == NAME && check_type(token)==0) {
+		token_tmp[0] = '\0';
+		strcat(token_tmp, " function (");
+		strcat(token_tmp, token);
+		while((c = gettoken()) == ',' && gettoken() == NAME && check_type(token)==0) {
+			strcat(token_tmp, ",");
+			strcat(token_tmp, token);
+		}
+		if (c == ')') {
+			strcat(token_tmp, ") returning");
+		}
+		else {
+			printf("error: something wrong with function`s argument types\n");
+			ungetstr(token_tmp);
+			return;
+		}
+		strcat(out, token_tmp);
+		/** we should call this to go to next token */
+		gettoken();
+	}
 	/** 3. one more check for ERR after gettoken() */
-	if (type == ERR) {
+	else if (type == ERR) {
 		printf("error[3]: some error symbol inserted\n");
 		return;
-	}
-}
-
-/** we should return string to 'stdin' if something is wrong */
-void ungetstr(char *str)
-{
-	int i = strlen(str);
-	/** ungetch() in reverse order */
-	while (i > 0) {
-		ungetch(str[i-1]);
-		i--;
 	}
 }
 
@@ -383,6 +409,8 @@ int gettokentype(void) {
 			goto out;
 		}
 		else if (tokentype == ERR) {
+			/** ungetch()/ungetstr() depends on ERR case... */
+			ungetstr(token);
 			goto out;
 		}
 		else {
